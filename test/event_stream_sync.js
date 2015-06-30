@@ -28,12 +28,41 @@ describe('EventStreamSynchronizer', function() {
 		it('should do nothing if commits matches', function(done) {
 			var commits = [new Commit('1', 'location', '1', 0, [{id:'1', type:'alloha'}]), new Commit('2', 'location', '1', 1, [{id:'2', type:'alloha'}])];
 			part.append(commits).then(function() {
-				synchronizer._processCommits(commits, '1');
-				done();
+				synchronizer._processCommits(commits, '1').then(function(conflict) {
+					part.openStream('1').then(function(stream) {
+						console.log(stream);
+						stream.getVersion().should.equal(2);
+						done();
+					});
+				});
 			});
 		});
+		it('should do append if seq is ok', function(done) {
+			var commits = [new Commit('1', 'location', '1', 0, [{id:'1', type:'alloha'}]), new Commit('2', 'location', '1', 1, [{id:'2', type:'alloha'}])];
+			part.append(commits).then(function() {
+				synchronizer._processCommits([new Commit('3', 'location', '1', 2, [{id:'3', type:'alloha'}])], '1').then(function(conflict) {
+					conflict.should.equal(false);
+					part.openStream('1').then(function(stream) {
+						stream.getVersion().should.equal(3);
+						done();
+					});
+				});
+			});
+		});		
+		it('should do trunk and indicate conflict if new commit', function(done) {
+			var commits = [new Commit('1', 'location', '1', 0, [{id:'1', type:'alloha'}]), new Commit('2', 'location', '1', 1, [{id:'2', type:'alloha'}])];
+			part.append(commits).then(function() {
+				synchronizer._processCommits([new Commit('3', 'location', '1', 1, [{id:'3', type:'alloha'}])], '1').then(function(conflict) {
+					conflict.should.equal(true);
+					part.openStream('1').then(function(stream) {
+						stream.getVersion().should.equal(2);
+						done();
+					});
+				});
+			});
+		});		
 	});
-	describe('#_applyNewCommit', function() {
+	xdescribe('#_applyNewCommit', function() {
 
 		it('should add if seq ok', function(done) {
 			var commits = [new Commit('1', 'location', '1', 0, [{id:'1', type:'alloha'}]), new Commit('2', 'location', '1', 1, [{id:'2', type:'alloha'}])];

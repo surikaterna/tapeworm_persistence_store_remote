@@ -31,6 +31,8 @@
   },
   "homepage": "https://github.com/surikaterna/tapeworm_persistence_store_remote#readme",
   "dependencies": {
+    "@surikat/job-queue": "^0.1.4",
+    "bluebird": "^2.9.30",
     "lodash": "^3.9.3"
   }
 }
