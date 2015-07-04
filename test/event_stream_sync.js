@@ -30,7 +30,6 @@ describe('EventStreamSynchronizer', function() {
 			part.append(commits).then(function() {
 				synchronizer._processCommits(commits, '1').then(function(conflict) {
 					part.openStream('1').then(function(stream) {
-						console.log(stream);
 						stream.getVersion().should.equal(2);
 						done();
 					});
@@ -40,7 +39,8 @@ describe('EventStreamSynchronizer', function() {
 		it('should do append if seq is ok', function(done) {
 			var commits = [new Commit('1', 'location', '1', 0, [{id:'1', type:'alloha'}]), new Commit('2', 'location', '1', 1, [{id:'2', type:'alloha'}])];
 			part.append(commits).then(function() {
-				synchronizer._processCommits([new Commit('3', 'location', '1', 2, [{id:'3', type:'alloha'}])], '1').then(function(conflict) {
+				var commit = new Commit('3', 'location', '1', 2, [{id:'3', type:'alloha'}]);
+				synchronizer._processCommits([commit], '1').then(function(conflict) {
 					conflict.should.equal(false);
 					part.openStream('1').then(function(stream) {
 						stream.getVersion().should.equal(3);

@@ -3,7 +3,8 @@ var should = require('should');
 var EventStreamSubscriber = require('..').Client.EventStreamSubscriber;
 
 function getSubscriber() {
- 	return new EventStreamSubscriber({subscribe: function() {return {stop:function() {}}}});
+	var client = {subscribe: function() {return {stop:function() {}}}};
+ 	return new EventStreamSubscriber(client);
 }
 
 describe('EventStreamsubhronizer', function() {
