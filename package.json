@@ -33,6 +33,7 @@
   "dependencies": {
     "@surikat/job-queue": "^0.1.4",
     "bluebird": "^2.9.30",
-    "lodash": "^3.9.3"
+    "lodash": "^3.10.1",
+    "tapeworm": "^0.2.1"
   }
 }
