@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "mocha test --recursive",
+    "test.watch": "mocha test --watch --recursive",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha -- --recursive test -u exports -R spec",
     "coverage-start": "istanbul cover node_modules/mocha/bin/_mocha test --recursive -- -u exports -R spec && start coverage/lcov-report/index.html",
     "jshint": "jshint ./lib",
@@ -22,7 +23,8 @@
     "jscs": "^1.11.3",
     "jshint": "^2.5.10",
     "mocha": "^2.0.1",
-    "should": "^4.1.0"
+    "should": "^4.1.0",
+    "socket.io-mock": "^1.2.3"
   },
   "author": "Andreas Karlsson",
   "license": "MIT",
