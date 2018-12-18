@@ -3,8 +3,8 @@ var Tapeworm = require('tapeworm');
 var Commit = require('tapeworm').Commit;
 var SocketMock = require('socket.io-mock');
 var TapewormSyncServer = require('../../lib/server');
-var RemoteDriver = require('../../lib/client/remote_persistence');
-var Client = require('../../lib/client/rrtw_client');
+var RemoteDriver = require('../../lib/client').RemotePersistence;
+var Client = require('../../lib/client').RemoteClient;
 
 var autobus = {
   leave: function () {}
@@ -20,7 +20,6 @@ describe('Remote partition server/client', function () {
     var remotePartition = new RemoteDriver(rrtwClient, 'blondie');
 
     clientTapeworm = new Tapeworm(remotePartition);
-
     tapeworm = new Tapeworm();
     tapeworm.openPartition('blondie').then(function(blondie) {
       serverPartition = blondie;
