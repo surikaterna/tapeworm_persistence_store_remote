@@ -36,6 +36,7 @@
     "@surikat/job-queue": "^0.1.4",
     "bluebird": "^2.9.30",
     "lodash": "^3.10.1",
+    "slf": "^1.0.1",
     "slf-debug": "^0.2.0",
     "tapeworm": "^0.2.1"
   }

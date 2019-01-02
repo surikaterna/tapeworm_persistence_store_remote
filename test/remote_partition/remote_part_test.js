@@ -62,6 +62,21 @@ describe('Remote partition server/client', function () {
     });
     tapewormSyncServer.addSocket(socketServer);
   });
+  it('#loadSnapshot should include events not persisted in snapshot', function (done) {
+    var commits = [new Commit('1', 'blondie', '1', 3, [{id:'1', type:'registered'}])];
+    const tapewormSyncServer = new TapewormSyncServer(serverPartition, autobus);
+    serverPartition.storeSnapshot('1', { test: 'success' }, 2, function () {
+      serverPartition.append(commits).then(function() {
+        clientPartition.loadSnapshot('1', true).then(function (res) {
+          res.snapshot.snapshot.test.should.equal('success');
+          res.commits[0].streamId.should.equal('1');
+          res.commits[0].events.length.should.equal(1);
+          done();
+        });
+      });
+    });
+    tapewormSyncServer.addSocket(socketServer);
+  });
   it('#queryStream should work on remote partition', function (done) {
     var commits = [new Commit('1', 'blondie', '1', 0, [{ id: '1', type: 'registered' }]), new Commit('2', 'blondie', '1', 1, [{ id: '1', type: 'amended' }])];
     const tapewormSyncServer = new TapewormSyncServer(serverPartition, autobus);
@@ -80,7 +95,6 @@ describe('Remote partition server/client', function () {
     const tapewormSyncServer = new TapewormSyncServer(serverPartition, autobus);
     serverPartition.append(commits).then(function () {
       clientPartition.queryStream('1').then(function (res) {
-        console.log('res', res);
         res.length.should.equal(2);
         res[0].events[0].type.should.equal('registered');
         res[1].events[0].type.should.equal('amended');
