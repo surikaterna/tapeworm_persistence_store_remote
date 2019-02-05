@@ -69,7 +69,7 @@ describe('Remote partition server/client', function () {
       new Commit('3', 'blondie', '1', 2, [{id:'1', type:'amended3'}, {id:'1', type:'amended4'}]),
     ];
     const tapewormSyncServer = new TapewormSyncServer(serverPartition, autobus);
-    serverPartition.storeSnapshot('1', { test: 'success' }, 3, function () {
+    serverPartition.storeSnapshot('1', { test: 'success' }, 2, function () {
       serverPartition.append(commits).then(function() {
         clientPartition.loadSnapshot('1', true).then(function (res) {
           res.snapshot.snapshot.test.should.equal('success');
@@ -88,7 +88,7 @@ describe('Remote partition server/client', function () {
       new Commit('3', 'blondie', '1', 2, [{id:'1', type:'amended3'}, {id:'1', type:'amended4'}]),
     ];
     const tapewormSyncServer = new TapewormSyncServer(serverPartition, autobus);
-    serverPartition.storeSnapshot('1', { test: 'success' }, 3, function () {
+    serverPartition.storeSnapshot('1', { test: 'success' }, 2, function () {
       serverPartition.append(commits).then(function() {
         clientPartition.queryStreamWithSnapshot('1').then(function (res) {
           res.snapshot.snapshot.test.should.equal('success');
