@@ -63,14 +63,37 @@ describe('Remote partition server/client', function () {
     tapewormSyncServer.addSocket(socketServer);
   });
   it('#loadSnapshot should include events not persisted in snapshot', function (done) {
-    var commits = [new Commit('1', 'blondie', '1', 3, [{id:'1', type:'registered'}])];
+    var commits = [
+      new Commit('1', 'blondie', '1', 0, [{id:'1', type:'registered'}]),
+      new Commit('2', 'blondie', '1', 1, [{id:'1', type:'amended1'}, {id:'1', type:'amended2'}]),
+      new Commit('3', 'blondie', '1', 2, [{id:'1', type:'amended3'}, {id:'1', type:'amended4'}]),
+    ];
     const tapewormSyncServer = new TapewormSyncServer(serverPartition, autobus);
-    serverPartition.storeSnapshot('1', { test: 'success' }, 2, function () {
+    serverPartition.storeSnapshot('1', { test: 'success' }, 3, function () {
       serverPartition.append(commits).then(function() {
         clientPartition.loadSnapshot('1', true).then(function (res) {
           res.snapshot.snapshot.test.should.equal('success');
           res.commits[0].streamId.should.equal('1');
-          res.commits[0].events.length.should.equal(1);
+          res.commits[0].events.length.should.equal(2);
+          done();
+        });
+      });
+    });
+    tapewormSyncServer.addSocket(socketServer);
+  });
+  it('#queryStreamWithSnapshot should include events not persisted in snapshot', function (done) {
+    var commits = [
+      new Commit('1', 'blondie', '1', 0, [{id:'1', type:'registered'}]),
+      new Commit('2', 'blondie', '1', 1, [{id:'1', type:'amended1'}, {id:'1', type:'amended2'}]),
+      new Commit('3', 'blondie', '1', 2, [{id:'1', type:'amended3'}, {id:'1', type:'amended4'}]),
+    ];
+    const tapewormSyncServer = new TapewormSyncServer(serverPartition, autobus);
+    serverPartition.storeSnapshot('1', { test: 'success' }, 3, function () {
+      serverPartition.append(commits).then(function() {
+        clientPartition.queryStreamWithSnapshot('1').then(function (res) {
+          res.snapshot.snapshot.test.should.equal('success');
+          res.commits[0].streamId.should.equal('1');
+          res.commits[0].events.length.should.equal(2);
           done();
         });
       });
