@@ -19,10 +19,10 @@
     "url": "git+https://github.com/surikaterna/tapeworm_persistence_store_remote.git"
   },
   "devDependencies": {
-    "istanbul": "^0.3.2",
-    "jscs": "^1.11.3",
+    "istanbul": "^0.4.5",
+    "jscs": "^3.0.7",
     "jshint": "^2.5.10",
-    "mocha": "^2.0.1",
+    "mocha": "^10.2.0",
     "should": "^4.1.0",
     "socket.io-mock": "^1.2.3"
   },
